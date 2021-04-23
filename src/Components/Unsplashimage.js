@@ -8,6 +8,10 @@ const Img = styled.img`
 
 `;
 
-export const Unsplashimage = ({ url, key }) => {
-    return <Img src={url} key={key} alt="" />
+
+export const Unsplashimage = ({ index, url, key, setCurr, setModal }) => {
+    return <Img src={url} key={key} alt="" onClick={() => {
+        setCurr(index);
+        setModal(true);
+      }} />
 }

@@ -1,11 +1,15 @@
 import React , {useState, useEffect} from 'react';
+import './App.css';
 import { Heading } from './Components/Heading';
 import { Unsplashimage } from './Components/Unsplashimage';
 import axios from 'axios';
-import { Loaded } from './Components/Loaded';
+import { Loader } from './Components/Loader';
 import styled from 'styled-components';
 import { createGlobalStyle } from 'styled-components';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import Modal from 'react-modal';
 
 const Globalstyle = createGlobalStyle`
   * {
@@ -29,6 +33,9 @@ const WrapperImage = styled.section`
 
 function App() {
   const [images, setImages] = useState([]);
+  const [modalone, setModal] = useState(false);
+  const [curr, setCurr] = useState();
+  
   
   useEffect(() => {
    
@@ -40,7 +47,7 @@ function App() {
     const accessKey = process.env.REACT_APP_ACCESSKEY;
 
     axios
-    .get(`${res}/photos/random?client_id=${accessKey}&count=10`)
+    .get(`${res}/photos/random?client_id=${accessKey}&count=8`)
     .then(result => setImages([...images, ...result.data]));
   }
   return (
@@ -52,14 +59,54 @@ function App() {
         dataLength={images.length}
         next={fetchImages}
         hasMore={true}
-        loader={<Loaded />}
+        loader={<Loader />}
       >
         <WrapperImage>
-          {images.map(image => (
-            <Unsplashimage url={image.urls.thumb} key={image.id} />
+          {images.map((image, index) => (
+            <Unsplashimage url={image.urls.regular} key={image.id} setCurr={setCurr} setModal={setModal} index={index} />
           ))}
         </WrapperImage>
       </InfiniteScroll>
+      <Modal
+          isOpen={modalone}
+          onRequestClose={() => setModal(false)}
+          style={{
+            overlay: {
+              opacity: 1,
+            },
+            content: {
+              position: "absolute",
+              top: 50,
+              left: "25vw",
+              right: "25vw",
+              bottom: 7,
+              maxWidth: "100vw",
+              maxHeight: "100vh",
+              borderRadius: 30,
+              color: "white",
+              backgroundColor: "white",
+            },
+
+          }}
+        >
+          <div className="modal_cont">
+          <button className="modal_btn" onClick={() =>
+              curr === 0 ? setCurr(images.length - 1) : setCurr(curr - 1)}>
+            <ArrowLeftIcon />
+          </button>
+          
+            <img className="img_transi"style={{ width: "34vw", height: "80vh"}} src={images[curr]?.urls.thumb} alt="" />
+            
+          
+          <br />
+          
+          
+          <button className="modal_btn1" onClick={() => curr === images.length ? setCurr(0) : setCurr(curr + 1)}>
+            <ArrowRightIcon />
+          </button>
+        
+          </div>
+        </Modal>
       
     </div>
   );
