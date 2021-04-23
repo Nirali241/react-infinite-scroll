@@ -95,7 +95,7 @@ function App() {
             <ArrowLeftIcon />
           </button>
           
-            <img className="img_transi"style={{ width: "34vw", height: "80vh"}} src={images[curr]?.urls.thumb} alt="" />
+            <img className="img_transi"style={{ width: "34vw", height: "80vh"}} src={images[curr]?.urls.regular} alt="" />
             
           
           <br />
